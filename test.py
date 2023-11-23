@@ -1,13 +1,13 @@
 import pytest
-from app import app
-
+from app import app as flask_app
 
 @pytest.fixture
-def client():
-    app.config['TESTING'] = True
-    with app.test_client() as client:
-        yield client
+def app():
+    yield flask_app
 
+@pytest.fixture
+def client(app):
+    return app.test_client()
 
 def test_app_is_working(client):
     response = client.get('/')
