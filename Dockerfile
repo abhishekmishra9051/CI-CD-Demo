@@ -1,19 +1,27 @@
-FROM strapi/base
+# Use an official Node.js runtime as the base image
+FROM node:14
 
-WORKDIR /my-app
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
-COPY package.json ./
-COPY yarn.lock ./
-
-RUN yarn install
-
+# Copy the required files into the container
 COPY . .
 
-ENV NODE_ENV production
+# Set environment variables
+ENV DATABASE_HOST localhost
+ENV DATABASE_PORT 5432
+ENV DATABASE_NAME strapi-db
+ENV DATABASE_USERNAME abhi
+ENV DATABASE_PASSWORD root
 
-RUN yarn build
+# Install Strapi globally via npm (if not already installed)
+RUN npm install strapi@latest -g
 
+# Install project dependencies
+RUN npm install
+
+# Expose the default Strapi port
 EXPOSE 1337
 
-CMD ["yarn", "start"]
-
+# Set the command to start Strapi
+CMD ["npm", "run", "start"]
